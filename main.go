@@ -19,7 +19,7 @@ func main() {
 	flag.StringVar(&secretKey, "s", "", "	")
 	flag.Parse()
 
-	client, err := minio.New("127.0.0.1:9000", accessKey, secretKey, false)
+	client, err := minio.NewWithRegion("127.0.0.1:9000", accessKey, secretKey, false, location)
 
 	// Test if bucket is there
 	exists, _ := client.BucketExists(bucket)
@@ -28,7 +28,7 @@ func main() {
 		err = client.MakeBucket(bucket, location)
 	}
 
-	n, err := client.PutObject(bucket, object, os.Stdin, "stream")
+	n, err := client.PutObjectStreaming(bucket, object, os.Stdin)
 	if err != nil {
 		log.Fatal(err)
 		return
